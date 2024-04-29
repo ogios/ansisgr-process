@@ -1,6 +1,7 @@
 package process
 
 import (
+	"bytes"
 	"errors"
 	"slices"
 	"strings"
@@ -321,4 +322,53 @@ func Extract(s string) (*ANSITableList, string) {
 	return &ANSITableList{
 		L: slices.Clip(tables),
 	}, normalString.String()
+}
+
+func Render(atl *ANSITableList, _s string, startIndex int) []byte {
+	s := []rune(_s)
+	at := atl.GetSlice(startIndex, startIndex+len(s))
+	if len(at) == 0 {
+		return []byte(_s)
+	}
+
+	var buf bytes.Buffer
+	index := 0
+	// every table
+	for _, a := range at {
+		// table's sub tables
+		temp := a.(*ANSITable)
+		endIndex := temp.Bound[1] - startIndex
+		for temp != nil {
+			startIndex := temp.Bound[0] - startIndex
+			// before table startIndex
+			if startIndex > index {
+				subRuneDatas := SliceFrom(s, index, startIndex)
+				// subRuneDatas := lineRunes[index:startIndex]
+				for _, runeData := range subRuneDatas {
+					buf.WriteRune(runeData)
+				}
+				index += len(subRuneDatas)
+			}
+			// ansi insert
+			buf.Write(temp.Data)
+			// assign sub table
+			temp = temp.Sub
+		}
+		// add rest
+		subRuneDatas := SliceFrom(s, index, endIndex)
+		for _, runeData := range subRuneDatas {
+			buf.WriteRune(runeData)
+		}
+		index += len(subRuneDatas)
+		// add end escape
+		buf.WriteString(ESCAPE_SEQUENCE_END)
+	}
+	// add rest
+	if index <= len(s)-1 {
+		subRuneDatas := s[index:]
+		for _, runeData := range subRuneDatas {
+			buf.WriteRune(runeData)
+		}
+	}
+	return buf.Bytes()
 }

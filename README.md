@@ -9,6 +9,8 @@
 
 - `Extract(string) -> (*ANSITableList, string)`  
   split `string with ansi` into `ansi sequences` and `raw string`
+- `Render(atl *ANSITableList, _s string, startIndex int) -> []byte`  
+  Render `string` with `ansi sequences`, `startIndex` is the start index of `_s` which will be used to fetch ansi table
 - `Search(bs []BoundStruct, position int) -> (res []int)`  
   binary search index given `Bound [2]int`, the result is index.  
   `len(res) <= 2` and `-1` means reach the start/end of the slice  
