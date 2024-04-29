@@ -125,9 +125,10 @@ func (a *ANSITableList) SetStyle(style []byte, startIndex, endIndex int) {
 	} else if len(temp) == 2 {
 		if temp[1] == -1 {
 			var t BoundsStruct = &ANSITable{
-				Sub:   nil,
-				Data:  style,
-				Bound: [2]int{a.L[temp[0]].GetBounds()[1], endIndex},
+				Sub:  nil,
+				Data: style,
+				// Bound: [2]int{a.L[temp[0]].GetBounds()[1], endIndex},
+				Bound: [2]int{startIndex, endIndex},
 			}
 			a.L = slices.Insert(a.L, len(a.L), t)
 			return
@@ -162,9 +163,10 @@ func (a *ANSITableList) SetStyle(style []byte, startIndex, endIndex int) {
 	} else if len(temp) == 2 {
 		if temp[0] == -1 {
 			var t BoundsStruct = &ANSITable{
-				Sub:   nil,
-				Data:  style,
-				Bound: [2]int{startIndex, a.L[temp[1]].GetBounds()[0]},
+				Sub:  nil,
+				Data: style,
+				// Bound: [2]int{startIndex, a.L[temp[1]].GetBounds()[0]},
+				Bound: [2]int{startIndex, endIndex},
 			}
 			a.L = slices.Insert(a.L, 0, t)
 			return
