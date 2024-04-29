@@ -59,7 +59,7 @@ func (a *ANSITable) AddStyle(data []byte, boundLeft int) {
 }
 
 // implement `BoundsStruct` for search
-func (a *ANSITable) getBounds() [2]int {
+func (a *ANSITable) GetBounds() [2]int {
 	return a.Bound
 }
 
@@ -127,7 +127,7 @@ func (a *ANSITableList) SetStyle(style []byte, startIndex, endIndex int) {
 			var t BoundsStruct = &ANSITable{
 				Sub:   nil,
 				Data:  style,
-				Bound: [2]int{a.L[temp[0]].getBounds()[1], endIndex},
+				Bound: [2]int{a.L[temp[0]].GetBounds()[1], endIndex},
 			}
 			a.L = slices.Insert(a.L, len(a.L), t)
 			return
@@ -136,9 +136,9 @@ func (a *ANSITableList) SetStyle(style []byte, startIndex, endIndex int) {
 				Sub:  nil,
 				Data: style,
 			}
-			t.Bound[1] = a.L[temp[1]].getBounds()[0]
+			t.Bound[1] = a.L[temp[1]].GetBounds()[0]
 			if temp[0] != -1 {
-				t.Bound[0] = a.L[temp[0]].getBounds()[1]
+				t.Bound[0] = a.L[temp[0]].GetBounds()[1]
 			}
 			var tt BoundsStruct = t
 			a.L = slices.Insert(a.L, temp[1], tt)
@@ -164,7 +164,7 @@ func (a *ANSITableList) SetStyle(style []byte, startIndex, endIndex int) {
 			var t BoundsStruct = &ANSITable{
 				Sub:   nil,
 				Data:  style,
-				Bound: [2]int{startIndex, a.L[temp[1]].getBounds()[0]},
+				Bound: [2]int{startIndex, a.L[temp[1]].GetBounds()[0]},
 			}
 			a.L = slices.Insert(a.L, 0, t)
 			return
@@ -174,9 +174,9 @@ func (a *ANSITableList) SetStyle(style []byte, startIndex, endIndex int) {
 				Data: style,
 			}
 			var tt BoundsStruct = t
-			t.Bound[0] = a.L[temp[0]].getBounds()[1]
+			t.Bound[0] = a.L[temp[0]].GetBounds()[1]
 			if temp[1] != -1 {
-				t.Bound[1] = a.L[temp[1]].getBounds()[0]
+				t.Bound[1] = a.L[temp[1]].GetBounds()[0]
 				a.L = slices.Insert(a.L, temp[1], tt)
 			} else {
 				t.Bound[1] = endIndex

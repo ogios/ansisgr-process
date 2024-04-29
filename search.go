@@ -1,7 +1,7 @@
 package process
 
 type BoundsStruct interface {
-	getBounds() [2]int
+	GetBounds() [2]int
 }
 
 // binary search index given `Bound [2]int`
@@ -24,7 +24,7 @@ func Search(list []BoundsStruct, pos int) []int {
 	for {
 		halfStep()
 		v := list[i]
-		vBound := v.getBounds()
+		vBound := v.GetBounds()
 		// between bounds
 		// or, width is 0 and index is the same
 		if vBound[0] <= pos && vBound[1] > pos {
@@ -35,7 +35,7 @@ func Search(list []BoundsStruct, pos int) []int {
 				if i > 0 {
 					// not the first one
 					prev := list[i-1]
-					if prev.getBounds()[1] <= pos {
+					if prev.GetBounds()[1] <= pos {
 						// i bigger than prev end and i smaller than current start means circumstance 2
 						return []int{i - 1, i}
 					} else {
@@ -51,7 +51,7 @@ func Search(list []BoundsStruct, pos int) []int {
 				if i < listLen-1 {
 					// not the last one
 					next := list[i+1]
-					if pos < next.getBounds()[0] {
+					if pos < next.GetBounds()[0] {
 						// i bigger than current end and smaller than next start means circumstance 2
 						return []int{i, i + 1}
 					} else {
